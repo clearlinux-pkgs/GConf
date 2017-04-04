@@ -4,12 +4,12 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 1
+Release  : 2
 URL      : ftp://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : ftp://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
 Group    : Development/Tools
-License  : GPL-2.0 LGPL-2.0
+License  : LGPL-2.0
 Requires: GConf-bin
 Requires: GConf-lib
 Requires: GConf-data
@@ -134,6 +134,7 @@ popd
 
 %build
 export LANG=C
+export SOURCE_DATE_EPOCH=1491314722
 %configure --disable-static --disable-orbit
 make V=1  %{?_smp_mflags}
 
@@ -142,7 +143,7 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
-%configure --disable-static --disable-orbit  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%configure --disable-static --disable-orbit   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make V=1  %{?_smp_mflags}
 popd
 %check
@@ -153,6 +154,7 @@ export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
+export SOURCE_DATE_EPOCH=1491314722
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -168,9 +170,6 @@ popd
 
 %files
 %defattr(-,root,root,-)
-/usr/lib32/GConf/2/libgconfbackend-oldxml.so
-/usr/lib32/GConf/2/libgconfbackend-xml.so
-/usr/lib32/gio/modules/libgsettingsgconfbackend.so
 /usr/lib32/girepository-1.0/GConf-2.0.typelib
 
 %files bin
@@ -183,7 +182,9 @@ popd
 
 %files data
 %defattr(-,root,root,-)
+/usr/lib64/girepository-1.0/GConf-2.0.typelib
 /usr/share/dbus-1/services/org.gnome.GConf.service
+/usr/share/gir-1.0/*.gir
 /usr/share/sgml/gconf/gconf-1.0.dtd
 
 %files dev
@@ -197,11 +198,9 @@ popd
 /usr/include/gconf/2/gconf/gconf-schema.h
 /usr/include/gconf/2/gconf/gconf-value.h
 /usr/include/gconf/2/gconf/gconf.h
-/usr/lib64/girepository-1.0/GConf-2.0.typelib
 /usr/lib64/libgconf-2.so
 /usr/lib64/pkgconfig/gconf-2.0.pc
 /usr/share/aclocal/*.m4
-/usr/share/gir-1.0/*.gir
 
 %files dev32
 %defattr(-,root,root,-)
@@ -244,6 +243,9 @@ popd
 
 %files lib32
 %defattr(-,root,root,-)
+/usr/lib32/GConf/2/libgconfbackend-oldxml.so
+/usr/lib32/GConf/2/libgconfbackend-xml.so
+/usr/lib32/gio/modules/libgsettingsgconfbackend.so
 /usr/lib32/libgconf-2.so.4
 /usr/lib32/libgconf-2.so.4.1.5
 
