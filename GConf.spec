@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 2
+Release  : 3
 URL      : ftp://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : ftp://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
