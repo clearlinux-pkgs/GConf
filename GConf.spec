@@ -4,9 +4,9 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 4
-URL      : ftp://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz
-Source0  : ftp://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz
+Release  : 5
+URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
+Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
 Group    : Development/Tools
 License  : LGPL-2.0
@@ -137,7 +137,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1503072990
+export SOURCE_DATE_EPOCH=1508273469
 %configure --disable-static --disable-orbit
 make V=1  %{?_smp_mflags}
 
@@ -157,7 +157,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1503072990
+export SOURCE_DATE_EPOCH=1508273469
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
