@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 6
+Release  : 7
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
