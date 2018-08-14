@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 8
+Release  : 9
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
@@ -13,13 +13,15 @@ License  : LGPL-2.0
 Requires: GConf-bin
 Requires: GConf-lib
 Requires: GConf-data
-Requires: GConf-doc
+Requires: GConf-license
 Requires: GConf-locales
+Requires: GConf-man
 BuildRequires : docbook-xml
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : gettext
+BuildRequires : glibc-bin
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
 BuildRequires : gobject-introspection-dev
@@ -28,6 +30,7 @@ BuildRequires : gtk-doc-dev
 BuildRequires : intltool
 BuildRequires : libxslt-bin
 BuildRequires : perl(XML::Parser)
+BuildRequires : pkg-config
 BuildRequires : pkgconfig(32dbus-1)
 BuildRequires : pkgconfig(32dbus-glib-1)
 BuildRequires : pkgconfig(32gio-2.0)
@@ -55,6 +58,8 @@ is not installed and compile the basic GConf library anyway.
 Summary: bin components for the GConf package.
 Group: Binaries
 Requires: GConf-data
+Requires: GConf-license
+Requires: GConf-man
 
 %description bin
 bin components for the GConf package.
@@ -95,6 +100,7 @@ dev32 components for the GConf package.
 %package doc
 Summary: doc components for the GConf package.
 Group: Documentation
+Requires: GConf-man
 
 %description doc
 doc components for the GConf package.
@@ -104,6 +110,7 @@ doc components for the GConf package.
 Summary: lib components for the GConf package.
 Group: Libraries
 Requires: GConf-data
+Requires: GConf-license
 
 %description lib
 lib components for the GConf package.
@@ -113,9 +120,18 @@ lib components for the GConf package.
 Summary: lib32 components for the GConf package.
 Group: Default
 Requires: GConf-data
+Requires: GConf-license
 
 %description lib32
 lib32 components for the GConf package.
+
+
+%package license
+Summary: license components for the GConf package.
+Group: Default
+
+%description license
+license components for the GConf package.
 
 
 %package locales
@@ -124,6 +140,14 @@ Group: Default
 
 %description locales
 locales components for the GConf package.
+
+
+%package man
+Summary: man components for the GConf package.
+Group: Default
+
+%description man
+man components for the GConf package.
 
 
 %prep
@@ -137,9 +161,9 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1508273469
+export SOURCE_DATE_EPOCH=1534285009
 %configure --disable-static --disable-orbit
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
@@ -147,7 +171,7 @@ export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
 %configure --disable-static --disable-orbit   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 popd
 %check
 export LANG=C
@@ -157,8 +181,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1508273469
+export SOURCE_DATE_EPOCH=1534285009
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/GConf
+cp COPYING %{buildroot}/usr/share/doc/GConf/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -212,8 +238,7 @@ popd
 /usr/lib32/pkgconfig/gconf-2.0.pc
 
 %files doc
-%defattr(-,root,root,-)
-%doc /usr/share/man/man1/*
+%defattr(0644,root,root,0755)
 /usr/share/gtk-doc/html/gconf/ch01.html
 /usr/share/gtk-doc/html/gconf/gconf-gconf-backend.html
 /usr/share/gtk-doc/html/gconf/gconf-gconf-changeset.html
@@ -251,6 +276,16 @@ popd
 /usr/lib32/gio/modules/libgsettingsgconfbackend.so
 /usr/lib32/libgconf-2.so.4
 /usr/lib32/libgconf-2.so.4.1.5
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/GConf/COPYING
+
+%files man
+%defattr(-,root,root,-)
+/usr/share/man/man1/gconftool-2.1
+/usr/share/man/man1/gsettings-data-convert.1
+/usr/share/man/man1/gsettings-schema-convert.1
 
 %files locales -f GConf2.lang
 %defattr(-,root,root,-)
