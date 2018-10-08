@@ -1,1 +1,1 @@
---disable-orbit
+--disable-orbit --sysconfdir=/usr/share/defaults/etc

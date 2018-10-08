@@ -4,18 +4,19 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 9
+Release  : 10
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
 Group    : Development/Tools
 License  : LGPL-2.0
-Requires: GConf-bin
-Requires: GConf-lib
-Requires: GConf-data
-Requires: GConf-license
-Requires: GConf-locales
-Requires: GConf-man
+Requires: GConf-bin = %{version}-%{release}
+Requires: GConf-data = %{version}-%{release}
+Requires: GConf-lib = %{version}-%{release}
+Requires: GConf-libexec = %{version}-%{release}
+Requires: GConf-license = %{version}-%{release}
+Requires: GConf-locales = %{version}-%{release}
+Requires: GConf-man = %{version}-%{release}
 BuildRequires : docbook-xml
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -57,9 +58,10 @@ is not installed and compile the basic GConf library anyway.
 %package bin
 Summary: bin components for the GConf package.
 Group: Binaries
-Requires: GConf-data
-Requires: GConf-license
-Requires: GConf-man
+Requires: GConf-data = %{version}-%{release}
+Requires: GConf-libexec = %{version}-%{release}
+Requires: GConf-license = %{version}-%{release}
+Requires: GConf-man = %{version}-%{release}
 
 %description bin
 bin components for the GConf package.
@@ -76,10 +78,10 @@ data components for the GConf package.
 %package dev
 Summary: dev components for the GConf package.
 Group: Development
-Requires: GConf-lib
-Requires: GConf-bin
-Requires: GConf-data
-Provides: GConf-devel
+Requires: GConf-lib = %{version}-%{release}
+Requires: GConf-bin = %{version}-%{release}
+Requires: GConf-data = %{version}-%{release}
+Provides: GConf-devel = %{version}-%{release}
 
 %description dev
 dev components for the GConf package.
@@ -88,10 +90,10 @@ dev components for the GConf package.
 %package dev32
 Summary: dev32 components for the GConf package.
 Group: Default
-Requires: GConf-lib32
-Requires: GConf-bin
-Requires: GConf-data
-Requires: GConf-dev
+Requires: GConf-lib32 = %{version}-%{release}
+Requires: GConf-bin = %{version}-%{release}
+Requires: GConf-data = %{version}-%{release}
+Requires: GConf-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the GConf package.
@@ -100,7 +102,7 @@ dev32 components for the GConf package.
 %package doc
 Summary: doc components for the GConf package.
 Group: Documentation
-Requires: GConf-man
+Requires: GConf-man = %{version}-%{release}
 
 %description doc
 doc components for the GConf package.
@@ -109,8 +111,9 @@ doc components for the GConf package.
 %package lib
 Summary: lib components for the GConf package.
 Group: Libraries
-Requires: GConf-data
-Requires: GConf-license
+Requires: GConf-data = %{version}-%{release}
+Requires: GConf-libexec = %{version}-%{release}
+Requires: GConf-license = %{version}-%{release}
 
 %description lib
 lib components for the GConf package.
@@ -119,11 +122,19 @@ lib components for the GConf package.
 %package lib32
 Summary: lib32 components for the GConf package.
 Group: Default
-Requires: GConf-data
-Requires: GConf-license
+Requires: GConf-data = %{version}-%{release}
+Requires: GConf-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the GConf package.
+
+
+%package libexec
+Summary: libexec components for the GConf package.
+Group: Default
+
+%description libexec
+libexec components for the GConf package.
 
 
 %package license
@@ -161,16 +172,17 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1534285009
-%configure --disable-static --disable-orbit
+export SOURCE_DATE_EPOCH=1539026149
+%configure --disable-static --disable-orbit --sysconfdir=/usr/share/defaults/etc
 make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export ASFLAGS="$ASFLAGS --32"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
-%configure --disable-static --disable-orbit   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%configure --disable-static --disable-orbit --sysconfdir=/usr/share/defaults/etc   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 %check
@@ -179,12 +191,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
+cd ../build32;
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1534285009
+export SOURCE_DATE_EPOCH=1539026149
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/GConf
-cp COPYING %{buildroot}/usr/share/doc/GConf/COPYING
+mkdir -p %{buildroot}/usr/share/package-licenses/GConf
+cp COPYING %{buildroot}/usr/share/package-licenses/GConf/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -207,12 +221,13 @@ popd
 /usr/bin/gconftool-2
 /usr/bin/gsettings-data-convert
 /usr/bin/gsettings-schema-convert
-/usr/libexec/gconfd-2
 
 %files data
 %defattr(-,root,root,-)
 /usr/lib64/girepository-1.0/GConf-2.0.typelib
 /usr/share/dbus-1/services/org.gnome.GConf.service
+/usr/share/defaults/etc/gconf/2/path
+/usr/share/defaults/etc/xdg/autostart/gsettings-data-convert.desktop
 /usr/share/gir-1.0/*.gir
 /usr/share/sgml/gconf/gconf-1.0.dtd
 
@@ -277,9 +292,13 @@ popd
 /usr/lib32/libgconf-2.so.4
 /usr/lib32/libgconf-2.so.4.1.5
 
+%files libexec
+%defattr(-,root,root,-)
+/usr/libexec/gconfd-2
+
 %files license
 %defattr(-,root,root,-)
-/usr/share/doc/GConf/COPYING
+/usr/share/package-licenses/GConf/COPYING
 
 %files man
 %defattr(-,root,root,-)
