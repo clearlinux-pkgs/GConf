@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 10
+Release  : 11
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
@@ -17,6 +17,7 @@ Requires: GConf-libexec = %{version}-%{release}
 Requires: GConf-license = %{version}-%{release}
 Requires: GConf-locales = %{version}-%{release}
 Requires: GConf-man = %{version}-%{release}
+BuildRequires : buildreq-gnome
 BuildRequires : docbook-xml
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -61,7 +62,6 @@ Group: Binaries
 Requires: GConf-data = %{version}-%{release}
 Requires: GConf-libexec = %{version}-%{release}
 Requires: GConf-license = %{version}-%{release}
-Requires: GConf-man = %{version}-%{release}
 
 %description bin
 bin components for the GConf package.
@@ -82,6 +82,7 @@ Requires: GConf-lib = %{version}-%{release}
 Requires: GConf-bin = %{version}-%{release}
 Requires: GConf-data = %{version}-%{release}
 Provides: GConf-devel = %{version}-%{release}
+Requires: GConf = %{version}-%{release}
 
 %description dev
 dev components for the GConf package.
@@ -132,6 +133,7 @@ lib32 components for the GConf package.
 %package libexec
 Summary: libexec components for the GConf package.
 Group: Default
+Requires: GConf-license = %{version}-%{release}
 
 %description libexec
 libexec components for the GConf package.
@@ -171,22 +173,31 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1539026149
-%configure --disable-static --disable-orbit --sysconfdir=/usr/share/defaults/etc
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1569633361
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
+%configure --disable-static --disable-orbit \
+--sysconfdir=/usr/share/defaults/etc \
+--disable-gtk
 make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export ASFLAGS="$ASFLAGS --32"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-export LDFLAGS="$LDFLAGS -m32"
-%configure --disable-static --disable-orbit --sysconfdir=/usr/share/defaults/etc   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
+%configure --disable-static --disable-orbit \
+--sysconfdir=/usr/share/defaults/etc \
+--disable-gtk   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
@@ -195,7 +206,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1539026149
+export SOURCE_DATE_EPOCH=1569633361
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/GConf
 cp COPYING %{buildroot}/usr/share/package-licenses/GConf/COPYING
@@ -297,11 +308,11 @@ popd
 /usr/libexec/gconfd-2
 
 %files license
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/package-licenses/GConf/COPYING
 
 %files man
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/man/man1/gconftool-2.1
 /usr/share/man/man1/gsettings-data-convert.1
 /usr/share/man/man1/gsettings-schema-convert.1

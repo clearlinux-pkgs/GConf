@@ -1,1 +1,3 @@
---disable-orbit --sysconfdir=/usr/share/defaults/etc
+--disable-orbit
+--sysconfdir=/usr/share/defaults/etc
+--disable-gtk
