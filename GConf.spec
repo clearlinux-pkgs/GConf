@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 11
+Release  : 12
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
@@ -23,10 +23,8 @@ BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : gettext
-BuildRequires : glibc-bin
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
-BuildRequires : gobject-introspection-dev
 BuildRequires : gtk-doc
 BuildRequires : gtk-doc-dev
 BuildRequires : intltool
@@ -165,6 +163,7 @@ man components for the GConf package.
 
 %prep
 %setup -q -n GConf-3.2.6
+cd %{_builddir}/GConf-3.2.6
 pushd ..
 cp -a GConf-3.2.6 build32
 popd
@@ -174,11 +173,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1569633361
+export SOURCE_DATE_EPOCH=1586224789
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 %configure --disable-static --disable-orbit \
 --sysconfdir=/usr/share/defaults/etc \
@@ -206,10 +205,10 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1569633361
+export SOURCE_DATE_EPOCH=1586224789
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/GConf
-cp COPYING %{buildroot}/usr/share/package-licenses/GConf/COPYING
+cp %{_builddir}/GConf-3.2.6/COPYING %{buildroot}/usr/share/package-licenses/GConf/5fb362ef1680e635fe5fb212b55eef4db9ead48f
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -309,7 +308,7 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/GConf/COPYING
+/usr/share/package-licenses/GConf/5fb362ef1680e635fe5fb212b55eef4db9ead48f
 
 %files man
 %defattr(0644,root,root,0755)
