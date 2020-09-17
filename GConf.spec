@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 12
+Release  : 13
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
@@ -19,26 +19,13 @@ Requires: GConf-locales = %{version}-%{release}
 Requires: GConf-man = %{version}-%{release}
 BuildRequires : buildreq-gnome
 BuildRequires : docbook-xml
-BuildRequires : gcc-dev32
-BuildRequires : gcc-libgcc32
-BuildRequires : gcc-libstdc++32
 BuildRequires : gettext
-BuildRequires : glibc-dev32
-BuildRequires : glibc-libc32
 BuildRequires : gtk-doc
 BuildRequires : gtk-doc-dev
 BuildRequires : intltool
 BuildRequires : libxslt-bin
 BuildRequires : perl(XML::Parser)
 BuildRequires : pkg-config
-BuildRequires : pkgconfig(32dbus-1)
-BuildRequires : pkgconfig(32dbus-glib-1)
-BuildRequires : pkgconfig(32gio-2.0)
-BuildRequires : pkgconfig(32glib-2.0)
-BuildRequires : pkgconfig(32gobject-2.0)
-BuildRequires : pkgconfig(32gthread-2.0)
-BuildRequires : pkgconfig(32gtk+-2.0)
-BuildRequires : pkgconfig(32libxml-2.0)
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(dbus-glib-1)
 BuildRequires : pkgconfig(gio-2.0)
@@ -86,18 +73,6 @@ Requires: GConf = %{version}-%{release}
 dev components for the GConf package.
 
 
-%package dev32
-Summary: dev32 components for the GConf package.
-Group: Default
-Requires: GConf-lib32 = %{version}-%{release}
-Requires: GConf-bin = %{version}-%{release}
-Requires: GConf-data = %{version}-%{release}
-Requires: GConf-dev = %{version}-%{release}
-
-%description dev32
-dev32 components for the GConf package.
-
-
 %package doc
 Summary: doc components for the GConf package.
 Group: Documentation
@@ -116,16 +91,6 @@ Requires: GConf-license = %{version}-%{release}
 
 %description lib
 lib components for the GConf package.
-
-
-%package lib32
-Summary: lib32 components for the GConf package.
-Group: Default
-Requires: GConf-data = %{version}-%{release}
-Requires: GConf-license = %{version}-%{release}
-
-%description lib32
-lib32 components for the GConf package.
 
 
 %package libexec
@@ -164,16 +129,13 @@ man components for the GConf package.
 %prep
 %setup -q -n GConf-3.2.6
 cd %{_builddir}/GConf-3.2.6
-pushd ..
-cp -a GConf-3.2.6 build32
-popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1586224789
+export SOURCE_DATE_EPOCH=1600316625
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -184,46 +146,23 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 --disable-gtk
 make  %{?_smp_mflags}
 
-pushd ../build32/
-export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
-export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
-export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
-export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
-%configure --disable-static --disable-orbit \
---sysconfdir=/usr/share/defaults/etc \
---disable-gtk   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
-make  %{?_smp_mflags}
-popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
-cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1586224789
+export SOURCE_DATE_EPOCH=1600316625
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/GConf
 cp %{_builddir}/GConf-3.2.6/COPYING %{buildroot}/usr/share/package-licenses/GConf/5fb362ef1680e635fe5fb212b55eef4db9ead48f
-pushd ../build32/
-%make_install32
-if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
-then
-pushd %{buildroot}/usr/lib32/pkgconfig
-for i in *.pc ; do ln -s $i 32$i ; done
-popd
-fi
-popd
 %make_install
 %find_lang GConf2
 
 %files
 %defattr(-,root,root,-)
-/usr/lib32/girepository-1.0/GConf-2.0.typelib
 
 %files bin
 %defattr(-,root,root,-)
@@ -256,12 +195,6 @@ popd
 /usr/lib64/pkgconfig/gconf-2.0.pc
 /usr/share/aclocal/*.m4
 
-%files dev32
-%defattr(-,root,root,-)
-/usr/lib32/libgconf-2.so
-/usr/lib32/pkgconfig/32gconf-2.0.pc
-/usr/lib32/pkgconfig/gconf-2.0.pc
-
 %files doc
 %defattr(0644,root,root,0755)
 /usr/share/gtk-doc/html/gconf/ch01.html
@@ -293,14 +226,6 @@ popd
 /usr/lib64/gio/modules/libgsettingsgconfbackend.so
 /usr/lib64/libgconf-2.so.4
 /usr/lib64/libgconf-2.so.4.1.5
-
-%files lib32
-%defattr(-,root,root,-)
-/usr/lib32/GConf/2/libgconfbackend-oldxml.so
-/usr/lib32/GConf/2/libgconfbackend-xml.so
-/usr/lib32/gio/modules/libgsettingsgconfbackend.so
-/usr/lib32/libgconf-2.so.4
-/usr/lib32/libgconf-2.so.4.1.5
 
 %files libexec
 %defattr(-,root,root,-)
