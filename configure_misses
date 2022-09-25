@@ -1,5 +1,5 @@
-Configure miss: whether to use ORBit
 Configure miss: DEFAULTS
-Configure miss: ldap.h usability
-Configure miss: ldap.h presence
 Configure miss: ldap.h
+Configure miss: ldap.h presence
+Configure miss: ldap.h usability
+Configure miss: whether to use ORBit

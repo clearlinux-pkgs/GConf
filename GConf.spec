@@ -4,7 +4,7 @@
 #
 Name     : GConf
 Version  : 3.2.6
-Release  : 16
+Release  : 17
 URL      : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Source0  : https://download.gnome.org/sources/GConf/3.2/GConf-3.2.6.tar.xz
 Summary  : GNOME Config System.
@@ -25,7 +25,6 @@ BuildRequires : gtk-doc-dev
 BuildRequires : intltool
 BuildRequires : libxslt-bin
 BuildRequires : perl(XML::Parser)
-BuildRequires : pkg-config
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(dbus-glib-1)
 BuildRequires : pkgconfig(gio-2.0)
@@ -135,7 +134,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1600316625
+export SOURCE_DATE_EPOCH=1664144073
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -154,10 +153,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1600316625
+export SOURCE_DATE_EPOCH=1664144073
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/GConf
-cp %{_builddir}/GConf-3.2.6/COPYING %{buildroot}/usr/share/package-licenses/GConf/5fb362ef1680e635fe5fb212b55eef4db9ead48f
+cp %{_builddir}/GConf-%{version}/COPYING %{buildroot}/usr/share/package-licenses/GConf/5fb362ef1680e635fe5fb212b55eef4db9ead48f || :
 %make_install
 %find_lang GConf2
 
