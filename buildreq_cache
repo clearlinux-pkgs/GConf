@@ -1,0 +1,4 @@
+3.2.6
+gtk-doc
+intltool
+pkgconfig(dbus-glib-1)
